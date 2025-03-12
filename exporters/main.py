@@ -8,7 +8,7 @@ from pathlib import Path
 
 import argparse
 
-from model_configs import *
+from .model_configs import *
 
 onnx_config_constructor_map = {
         'efficientnet': EfficientNetOnnxConfig
@@ -36,7 +36,7 @@ def create_onnx_config(config: AutoConfig, task: str):
 
     return onnx_config    
 
-def export_onnx(repo_id: str , task: str = 'feature-extraction', output_path: Path = Path('')):
+def export_onnx(repo_id: str , task: str = 'feature-extraction', output: str = ''):
     """
     Parameters
     ----------
@@ -49,43 +49,46 @@ def export_onnx(repo_id: str , task: str = 'feature-extraction', output_path: Pa
 
     #check if path exist
 
-    model, config = create_model(repo_id, task)
-    onnx_config = create_onnx_config(config, task)
-    onnx_path = Path.cwd() / output_path / repo_id / 'model.onnx'
-    onnx_inputs, onnx_outputs = export(model, onnx_config, onnx_path, onnx_config.DEFAULT_ONNX_OPSET)
+    print(repo_id, task, output)
 
-    return onnx_inputs, onnx_outputs
+    # model, config = create_model(repo_id, task)
+    # onnx_config = create_onnx_config(config, task)
+    # onnx_path = Path.cwd() / output / repo_id / 'model.onnx'
+    # onnx_inputs, onnx_outputs = export(model, onnx_config, onnx_path, onnx_config.DEFAULT_ONNX_OPSET)
+
+    # return onnx_inputs, onnx_outputs
 
 def parse_arguments():
     parser = argparse.ArgumentParser(prog='export_onnx')
     parser.add_argument(
-        '--repo-id',
+        '-r','--repo-id',
         type=str,
         required=True,
         help='Repo ID on Huggingface'
     )
     parser.add_argument(
-        '--task',
+        '-t','--task',
         type=str,
         default='feature-extraction',
         help='The model\'s task'
     )
     parser.add_argument(
-        '--output',
+        '-o','--output',
         type=str,
-        default=Path.cwd(),
+        default='',
         help='output path for model.onnx file'
     )
     args = parser.parse_args()
     return args
 
-def main(repo_id: str , task: str, output_path: Path):
-    export_onnx(repo_id, task, output_path)
+def main(args):
+    export_onnx(args.repo_id, args.task, args.output)
 
 if __name__ == '__main__':
     args = parse_arguments()
-    print(args)
+    main(args)
 
-__all__ = {
-    'export_onnx'
-}
+__all__ = [
+    'export_onnx',
+    'parse_arguments'
+]
