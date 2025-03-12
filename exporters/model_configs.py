@@ -1,0 +1,1 @@
+# onnx config for diff model types
