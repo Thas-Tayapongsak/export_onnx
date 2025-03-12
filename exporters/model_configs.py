@@ -13,5 +13,5 @@ class EfficientNetOnnxConfig(ViTOnnxConfig):
         return common_outputs
     
 __all__ = [
-    EfficientNetOnnxConfig
+    'EfficientNetOnnxConfig'
 ]

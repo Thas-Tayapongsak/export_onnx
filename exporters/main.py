@@ -57,12 +57,35 @@ def export_onnx(repo_id: str , task: str = 'feature-extraction', output_path: Pa
     return onnx_inputs, onnx_outputs
 
 def parse_arguments():
-    parser = argparse.ArgumentParser()
-    return None
+    parser = argparse.ArgumentParser(prog='export_onnx')
+    parser.add_argument(
+        '--repo-id',
+        type=str,
+        required=True,
+        help='Repo ID on Huggingface'
+    )
+    parser.add_argument(
+        '--task',
+        type=str,
+        default='feature-extraction',
+        help='The model\'s task'
+    )
+    parser.add_argument(
+        '--output',
+        type=str,
+        default=Path.cwd(),
+        help='output path for model.onnx file'
+    )
+    args = parser.parse_args()
+    return args
 
 def main(repo_id: str , task: str, output_path: Path):
     export_onnx(repo_id, task, output_path)
 
 if __name__ == '__main__':
     args = parse_arguments()
-    main(*args)
+    print(args)
+
+__all__ = {
+    'export_onnx'
+}

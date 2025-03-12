@@ -1,0 +1,2 @@
+optimum==1.25.0.dev0
+transformers==4.49.0
