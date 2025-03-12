@@ -1,7 +1,3 @@
-# automodel
-# config
-# onnxconfig
-# export
 from transformers import AutoConfig, AutoModel, AutoModelForImageClassification
 from optimum.exporters.onnx import export
 from pathlib import Path
@@ -50,6 +46,10 @@ def export_onnx(repo_id: str , task: str = 'feature-extraction', output: str = '
     #check if path exist
 
     print(repo_id, task, output)
+
+    # TODO:
+    # test this later
+    # output might need rework
 
     # model, config = create_model(repo_id, task)
     # onnx_config = create_onnx_config(config, task)
