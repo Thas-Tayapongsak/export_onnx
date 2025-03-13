@@ -2,10 +2,13 @@ from transformers import AutoConfig, AutoModel, AutoModelForImageClassification,
 from optimum.exporters.onnx import export, OnnxConfig
 from optimum.exporters import TasksManager
 from pathlib import Path
+import logging
 
 import argparse
 
-from .model_configs import *
+from model_configs import *
+
+logger = logging.getLogger(__name__)
 
 onnx_config_constructor_map = {
         'efficientnet': EfficientNetOnnxConfig
@@ -27,8 +30,8 @@ def create_onnx_config(config: PretrainedConfig, task: str) -> OnnxConfig:
     """
     Parameters
     ----------
-    config: AutoConfig
-        AutoConfig config of huggingface model
+    config: PretrainedConfig
+        PretrainedConfig config of huggingface model
     task: str
         Task of the model
 
@@ -46,26 +49,29 @@ def create_onnx_config(config: PretrainedConfig, task: str) -> OnnxConfig:
 
     return onnx_config    
 
-def export_onnx(repo_id: str , task: str = 'feature-extraction', output_path: str = '', abs_path: str= ''):
+def export_onnx(repo_id: str, 
+                task: str = 'feature-extraction', 
+                output_path: str = '', 
+                abs_path: str= ''
+                ) -> tuple[list[str], list[str]]:
     """
     Parameters
     ----------
+    repo_id: str
+        Huggingface repo_id
+    task: str
+        task of the model
     output_path: str
         relative path where model.onnx file will be stored
     abs_path: str
         absolute path where model.onnx file will be stored
+
+    Returns
+    -------
+    input and output names
     """
     if task not in auto_class_task_map.keys():
-        # logger error
-        pass
-
-    #check if path exist
-
-    print(repo_id, task, output_path)
-
-    # TODO:
-    # test this later
-    # output might need rework
+        raise ValueError(f'{task} task is not supported. Supported tasks: {auto_class_task_map.keys()}')
 
     model = create_model(repo_id, task)
     onnx_config = create_onnx_config(model.config, task)
@@ -110,7 +116,7 @@ def parse_arguments():
     return args
 
 def main(args):
-    export_onnx(args.repo_id, args.task, args.output_path, args.abs_path)
+    onnx_inputs, onnx_outputs = export_onnx(args.repo_id, args.task, args.output_path, args.abs_path)
 
 if __name__ == '__main__':
     args = parse_arguments()
