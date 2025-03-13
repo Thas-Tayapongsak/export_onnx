@@ -6,7 +6,7 @@ import logging
 
 import argparse
 
-from model_configs import *
+from .model_configs import *
 
 logger = logging.getLogger(__name__)
 
