@@ -11,7 +11,8 @@ from .model_configs import *
 logger = logging.getLogger(__name__)
 
 onnx_config_constructor_map = {
-        'efficientnet': EfficientNetOnnxConfig
+        'efficientnet': EfficientNetOnnxConfig,
+        'mobilenet-v3': MobileNetV3OnnxConfig
     }
 
 auto_class_task_map = {
