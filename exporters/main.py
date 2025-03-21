@@ -1,5 +1,5 @@
 from transformers import AutoConfig, AutoModel, AutoModelForImageClassification, PretrainedConfig
-from optimum.exporters.onnx import export, OnnxConfig
+from optimum.exporters.onnx import export, OnnxConfig, validate_model_outputs
 from optimum.exporters import TasksManager
 from pathlib import Path
 import logging
@@ -53,7 +53,8 @@ def create_onnx_config(config: PretrainedConfig, task: str) -> OnnxConfig:
 def export_onnx(repo_id: str, 
                 task: str = 'feature-extraction', 
                 output_path: str = '', 
-                abs_path: str= ''
+                abs_path: str= '',
+                do_validation: bool=False
                 ) -> tuple[list[str], list[str]]:
     """
     Parameters
@@ -66,6 +67,8 @@ def export_onnx(repo_id: str,
         relative path where model.onnx file will be stored
     abs_path: str
         absolute path where model.onnx file will be stored
+    do_validation: bool
+        to validate onnx model or not
 
     Returns
     -------
@@ -85,6 +88,9 @@ def export_onnx(repo_id: str,
     onnx_path.mkdir(parents=True, exist_ok=True)
     onnx_inputs, onnx_outputs = export(model, onnx_config, onnx_path / 'model.onnx', onnx_config.DEFAULT_ONNX_OPSET)
 
+    if do_validation:
+        validate_model_outputs(onnx_config, model, onnx_path, onnx_outputs, onnx_config.ATOL_FOR_VALIDATION)
+        
     return onnx_inputs, onnx_outputs
 
 def parse_arguments():
@@ -106,18 +112,23 @@ def parse_arguments():
         type=str,
         default='',
         help='relative output path for model.onnx file'
-    ),
+    )
     parser.add_argument(
         '-a','--abs-path',
         type=str,
         default='',
         help='absolute output path for model.onnx file'
     )
+    parser.add_argument(
+        '-V', '--do-validation',
+        action='store_true',
+        help='validate onnx model'
+    )
     args = parser.parse_args()
     return args
 
 def main(args):
-    onnx_inputs, onnx_outputs = export_onnx(args.repo_id, args.task, args.output_path, args.abs_path)
+    onnx_inputs, onnx_outputs = export_onnx(args.repo_id, args.task, args.output_path, args.abs_path, args.do_validation)
 
 if __name__ == '__main__':
     args = parse_arguments()
