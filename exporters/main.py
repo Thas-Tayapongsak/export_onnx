@@ -89,8 +89,8 @@ def export_onnx(repo_id: str,
     onnx_inputs, onnx_outputs = export(model, onnx_config, onnx_path / 'model.onnx', onnx_config.DEFAULT_ONNX_OPSET)
 
     if do_validation:
-        validate_model_outputs(onnx_config, model, onnx_path, onnx_outputs, onnx_config.ATOL_FOR_VALIDATION)
-        
+        validate_model_outputs(onnx_config, model, onnx_path / 'model.onnx', onnx_outputs, onnx_config.ATOL_FOR_VALIDATION)
+
     return onnx_inputs, onnx_outputs
 
 def parse_arguments():
