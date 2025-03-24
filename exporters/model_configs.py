@@ -22,7 +22,20 @@ class MobileNetV3OnnxConfig(ViTOnnxConfig):
         
         return common_outputs
     
+
+class RetinaNetOnnxConfig(ViTOnnxConfig):
+    @property
+    def outputs(self) -> Dict[str, Dict[int, str]]:   
+        return OrderedDict(
+            {
+                "boxes": {0: "batch_size", 1: "num_predictions", 2: "bbox_coordinates"},
+                "scores": {0: "batch_size", 1: "num_predictions"},
+                "labels": {0: "batch_size", 1: "num_predictions"},
+            }
+        )
+    
 __all__ = [
     'EfficientNetOnnxConfig',
-    'MobileNetV3OnnxConfig'
+    'MobileNetV3OnnxConfig',
+    'RetinaNetOnnxConfig'
 ]

@@ -1,4 +1,10 @@
-from transformers import AutoConfig, AutoModel, AutoModelForImageClassification, PretrainedConfig
+from transformers import (
+    AutoConfig, 
+    AutoModel, 
+    AutoModelForImageClassification, 
+    AutoModelForObjectDetection, 
+    PretrainedConfig
+)
 from optimum.exporters.onnx import export, OnnxConfig, validate_model_outputs
 from optimum.exporters import TasksManager
 from pathlib import Path
@@ -12,12 +18,14 @@ logger = logging.getLogger(__name__)
 
 onnx_config_constructor_map = {
         'efficientnet': EfficientNetOnnxConfig,
-        'mobilenet-v3': MobileNetV3OnnxConfig
+        'mobilenet-v3': MobileNetV3OnnxConfig,
+        'retinanet': RetinaNetOnnxConfig
     }
 
 auto_class_task_map = {
         'feature-extraction': AutoModel,
-        'image-classification': AutoModelForImageClassification
+        'image-classification': AutoModelForImageClassification,
+        'object-detection': AutoModelForObjectDetection
     }
 
 def create_model(repo_id: str, task: str):
