@@ -19,13 +19,13 @@ logger = logging.getLogger(__name__)
 onnx_config_constructor_map = {
         'efficientnet': EfficientNetOnnxConfig,
         'mobilenet-v3': MobileNetV3OnnxConfig,
-        'retinanet': RetinaNetOnnxConfig
+        'retinanet': RetinaNetOnnxConfig,
     }
 
 auto_class_task_map = {
         'feature-extraction': AutoModel,
         'image-classification': AutoModelForImageClassification,
-        'object-detection': AutoModelForObjectDetection
+        'object-detection': AutoModelForObjectDetection,
     }
 
 def create_model(repo_id: str, task: str):
@@ -95,7 +95,7 @@ def export_onnx(repo_id: str,
         onnx_path = Path.cwd() / 'onnx' / repo_id 
     onnx_path.mkdir(parents=True, exist_ok=True)
     onnx_inputs, onnx_outputs = export(model, onnx_config, onnx_path / 'model.onnx', onnx_config.DEFAULT_ONNX_OPSET)
-
+    
     if do_validation:
         validate_model_outputs(onnx_config, model, onnx_path / 'model.onnx', onnx_outputs, onnx_config.ATOL_FOR_VALIDATION)
 
