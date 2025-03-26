@@ -1,3 +1,7 @@
+import argparse
+import logging
+from pathlib import Path
+
 from transformers import (
     AutoConfig, 
     AutoModel, 
@@ -7,10 +11,6 @@ from transformers import (
 )
 from optimum.exporters.onnx import export, OnnxConfig, validate_model_outputs
 from optimum.exporters import TasksManager
-from pathlib import Path
-import logging
-
-import argparse
 
 from .model_configs import *
 
@@ -28,12 +28,25 @@ auto_class_task_map = {
         'object-detection': AutoModelForObjectDetection,
     }
 
-def create_model(repo_id: str, task: str):
 
+def create_model(repo_id: str, task: str) -> AutoModel:
+    """
+    Parameters
+    ----------
+    repo_id: str
+        repository ID
+    task: str
+        Task of the model
+
+    Returns
+    -------
+    model
+    """
     auto_class = auto_class_task_map.get(task)
     model = auto_class.from_pretrained(repo_id, trust_remote_code = True)  
     
     return model
+
 
 def create_onnx_config(config: PretrainedConfig, task: str) -> OnnxConfig:
     """
@@ -58,12 +71,14 @@ def create_onnx_config(config: PretrainedConfig, task: str) -> OnnxConfig:
 
     return onnx_config    
 
-def export_onnx(repo_id: str, 
-                task: str = 'feature-extraction', 
-                output_path: str = '', 
-                abs_path: str= '',
-                do_validation: bool=False
-                ) -> tuple[list[str], list[str]]:
+
+def export_onnx(
+        repo_id: str, 
+        task: str = 'feature-extraction', 
+        output_path: str = '', 
+        abs_path: str= '',
+        do_validation: bool=False
+    ) -> tuple[list[str], list[str]]:
     """
     Parameters
     ----------
@@ -101,6 +116,7 @@ def export_onnx(repo_id: str,
 
     return onnx_inputs, onnx_outputs
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser(prog='export_onnx')
     parser.add_argument(
@@ -135,12 +151,15 @@ def parse_arguments():
     args = parser.parse_args()
     return args
 
+
 def main(args):
     onnx_inputs, onnx_outputs = export_onnx(args.repo_id, args.task, args.output_path, args.abs_path, args.do_validation)
+
 
 if __name__ == '__main__':
     args = parse_arguments()
     main(args)
+
 
 __all__ = [
     'export_onnx',

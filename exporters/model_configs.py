@@ -1,7 +1,8 @@
+from typing import OrderedDict, Dict
+
 from optimum.exporters.onnx.model_configs import ViTOnnxConfig
 from optimum.utils import DummyVisionInputGenerator
 
-from typing import OrderedDict, Dict
 
 class EfficientNetOnnxConfig(ViTOnnxConfig):
     @property
@@ -13,6 +14,7 @@ class EfficientNetOnnxConfig(ViTOnnxConfig):
         
         return common_outputs
     
+
 class MobileNetV3OnnxConfig(ViTOnnxConfig):
     @property
     def outputs(self) -> Dict[str, Dict[int, str]]:
@@ -25,7 +27,6 @@ class MobileNetV3OnnxConfig(ViTOnnxConfig):
     
 
 class RetinaNetObjectDetectionInputGenerator(DummyVisionInputGenerator):
-
     SUPPORTED_INPUT_NAMES = (
         "pixel_values",
     )
@@ -37,6 +38,7 @@ class RetinaNetObjectDetectionInputGenerator(DummyVisionInputGenerator):
                     framework=framework,
                     dtype=float_dtype,
                 )
+
 
 class RetinaNetOnnxConfig(ViTOnnxConfig):
     DUMMY_INPUT_GENERATOR_CLASSES = (RetinaNetObjectDetectionInputGenerator,)
@@ -59,7 +61,8 @@ class RetinaNetOnnxConfig(ViTOnnxConfig):
                 "num_anchors_per_level": {0: "num_levels"},
             }
         )
-    
+
+
 __all__ = [
     'EfficientNetOnnxConfig',
     'MobileNetV3OnnxConfig',
