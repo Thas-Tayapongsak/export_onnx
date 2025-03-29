@@ -26,31 +26,7 @@ class MobileNetV3OnnxConfig(ViTOnnxConfig):
         return common_outputs
     
 
-class RetinaNetObjectDetectionInputGenerator(DummyVisionInputGenerator):
-    SUPPORTED_INPUT_NAMES = (
-        "pixel_values",
-    )
-
-    def generate(self, input_name: str, framework: str = "pt", int_dtype: str = "int64", float_dtype: str = "fp32"):
-        if input_name == "pixel_values":
-            return self.random_float_tensor(
-                    shape=[self.batch_size, self.num_channels, self.height, self.width],
-                    framework=framework,
-                    dtype=float_dtype,
-                )
-
-
 class RetinaNetOnnxConfig(ViTOnnxConfig):
-    DUMMY_INPUT_GENERATOR_CLASSES = (RetinaNetObjectDetectionInputGenerator,)
-
-    @property
-    def inputs(self) -> Dict[str, Dict[int, str]]:
-        return OrderedDict(
-            {
-                "pixel_values": {0: "batch_size", 1: "num_channels", 2: "height", 3: "width"},
-            }
-        )
-
     @property
     def outputs(self) -> Dict[str, Dict[int, str]]:
         return OrderedDict(
