@@ -2,3 +2,8 @@ venv/
 onnx/
 __pycache__/
 *.onnx
+*.pth
+*.pt
+*.pkl
+*.zip
+*.safetensors

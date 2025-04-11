@@ -20,6 +20,7 @@ onnx_config_constructor_map = {
         'efficientnet': EfficientNetOnnxConfig,
         'mobilenet-v3': MobileNetV3OnnxConfig,
         'retinanet': RetinaNetOnnxConfig,
+        'rf-detr': RFDetrOnnxConfig,
     }
 
 auto_class_task_map = {
